@@ -1,0 +1,156 @@
+<div class="users-container">
+  <div class="header-section">
+    <h2>👥 Users Management</h2>
+    <p>Demonstrate CRUD operations with tRPC and RxJS observables</p>
+  </div>
+
+  <!-- Create User Section -->
+  <div class="section">
+    <h3>➕ Create New User</h3>
+    <form (ngSubmit)="createUser()" class="user-form">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input 
+          id="name"
+          type="text" 
+          [(ngModel)]="newUser.name" 
+          name="name"
+          required
+          class="form-input"
+          placeholder="Enter user name"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input 
+          id="email"
+          type="email" 
+          [(ngModel)]="newUser.email" 
+          name="email"
+          required
+          class="form-input"
+          placeholder="Enter user email"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <input 
+          id="age"
+          type="number" 
+          [(ngModel)]="newUser.age" 
+          name="age"
+          required
+          min="0"
+          class="form-input"
+          placeholder="Enter user age"
+        >
+      </div>
+      
+      <button type="submit" [disabled]="isLoading" class="btn btn-primary">
+        {{ isLoading ? 'Creating...' : 'Create User' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Users List Section -->
+  <div class="section">
+    <div class="section-header">
+      <h3>📋 Users List</h3>
+      <button (click)="loadUsers()" [disabled]="isLoading" class="btn btn-secondary">
+        {{ isLoading ? 'Loading...' : 'Refresh Users' }}
+      </button>
+    </div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading && users.length === 0" class="loading">
+      <p>Loading users...</p>
+    </div>
+
+    <!-- Users table -->
+    <div *ngIf="users.length > 0" class="users-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>
+              <span *ngIf="!user.isEditing">{{ user.name }}</span>
+              <input 
+                *ngIf="user.isEditing"
+                [(ngModel)]="user.editedName"
+                class="form-input-small"
+              >
+            </td>
+            <td>
+              <span *ngIf="!user.isEditing">{{ user.email }}</span>
+              <input 
+                *ngIf="user.isEditing"
+                [(ngModel)]="user.editedEmail"
+                type="email"
+                class="form-input-small"
+              >
+            </td>
+            <td>
+              <span *ngIf="!user.isEditing">{{ user.age }}</span>
+              <input 
+                *ngIf="user.isEditing"
+                [(ngModel)]="user.editedAge"
+                type="number"
+                min="0"
+                class="form-input-small"
+              >
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button 
+                  *ngIf="!user.isEditing"
+                  (click)="startEdit(user)" 
+                  class="btn btn-small btn-outline"
+                >
+                  Edit
+                </button>
+                <button 
+                  *ngIf="user.isEditing"
+                  (click)="saveEdit(user)" 
+                  [disabled]="isLoading"
+                  class="btn btn-small btn-primary"
+                >
+                  Save
+                </button>
+                <button 
+                  *ngIf="user.isEditing"
+                  (click)="cancelEdit(user)" 
+                  class="btn btn-small btn-secondary"
+                >
+                  Cancel
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!isLoading && users.length === 0" class="empty-state">
+      <p>No users found. Create your first user above!</p>
+    </div>
+  </div>
+
+  <!-- Error display -->
+  <div *ngIf="error" class="error-card">
+    <h4>❌ Error:</h4>
+    <p>{{ error }}</p>
+    <button (click)="clearError()" class="btn btn-secondary">Clear Error</button>
+  </div>
+</div> 

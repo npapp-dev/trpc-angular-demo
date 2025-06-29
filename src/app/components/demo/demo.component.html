@@ -1,0 +1,167 @@
+<div class="demo-container">
+  <div class="header-section">
+    <h2>🧪 Advanced tRPC + RxJS Demo</h2>
+    <p>Test advanced features like error handling, slow queries, and reactive patterns</p>
+  </div>
+
+  <!-- Error Handling Demo -->
+  <div class="section">
+    <h3>❌ Error Handling Demo</h3>
+    <p>Test how tRPC handles errors with RxJS observables:</p>
+    
+    <div class="demo-controls">
+      <button 
+        (click)="testError(false)" 
+        [disabled]="isLoading"
+        class="btn btn-success"
+      >
+        {{ isLoading ? 'Testing...' : 'Test Success' }}
+      </button>
+      <button 
+        (click)="testError(true)" 
+        [disabled]="isLoading"
+        class="btn btn-danger"
+      >
+        {{ isLoading ? 'Testing...' : 'Test Error' }}
+      </button>
+    </div>
+
+    <!-- Display error test result -->
+    <div *ngIf="errorTestResult" class="result-card">
+      <h4>Error Test Result:</h4>
+      <p><strong>Message:</strong> {{ errorTestResult.message }}</p>
+    </div>
+  </div>
+
+  <!-- Slow Query Demo -->
+  <div class="section">
+    <h3>⏱️ Slow Query Demo</h3>
+    <p>Test slow queries with custom delays to see loading states:</p>
+    
+    <div class="demo-controls">
+      <div class="form-group">
+        <label for="delay">Delay (ms):</label>
+        <input 
+          id="delay"
+          type="number" 
+          [(ngModel)]="queryDelay" 
+          min="100"
+          max="10000"
+          class="form-input"
+          placeholder="Enter delay in milliseconds"
+        >
+      </div>
+      <button 
+        (click)="testSlowQuery()" 
+        [disabled]="isLoading"
+        class="btn btn-warning"
+      >
+        {{ isLoading ? 'Loading...' : 'Test Slow Query' }}
+      </button>
+    </div>
+
+    <!-- Display slow query result -->
+    <div *ngIf="slowQueryResult" class="result-card">
+      <h4>Slow Query Result:</h4>
+      <p><strong>Message:</strong> {{ slowQueryResult.message }}</p>
+      <p><strong>Timestamp:</strong> {{ slowQueryResult.timestamp | date:'medium' }}</p>
+    </div>
+  </div>
+
+  <!-- Reactive Patterns Demo -->
+  <div class="section">
+    <h3>🔄 Reactive Patterns Demo</h3>
+    <p>Demonstrate reactive patterns with tRPC and RxJS:</p>
+    
+    <div class="demo-controls">
+      <button 
+        (click)="startReactiveDemo()" 
+        [disabled]="isReactiveDemoRunning"
+        class="btn btn-primary"
+      >
+        {{ isReactiveDemoRunning ? 'Running...' : 'Start Reactive Demo' }}
+      </button>
+      <button 
+        (click)="stopReactiveDemo()" 
+        [disabled]="!isReactiveDemoRunning"
+        class="btn btn-secondary"
+      >
+        Stop Demo
+      </button>
+    </div>
+
+    <!-- Reactive demo results -->
+    <div *ngIf="reactiveResults.length > 0" class="reactive-results">
+      <h4>Reactive Demo Results:</h4>
+      <div class="results-list">
+        <div *ngFor="let result of reactiveResults; trackBy: trackByIndex" class="result-item">
+          <span class="result-time">{{ result.timestamp | date:'HH:mm:ss' }}</span>
+          <span class="result-message">{{ result.message }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Batch Operations Demo -->
+  <div class="section">
+    <h3>📦 Batch Operations Demo</h3>
+    <p>Test multiple tRPC calls in sequence and parallel:</p>
+    
+    <div class="demo-controls">
+      <button 
+        (click)="testSequentialCalls()" 
+        [disabled]="isLoading"
+        class="btn btn-info"
+      >
+        {{ isLoading ? 'Running...' : 'Test Sequential Calls' }}
+      </button>
+      <button 
+        (click)="testParallelCalls()" 
+        [disabled]="isLoading"
+        class="btn btn-info"
+      >
+        {{ isLoading ? 'Running...' : 'Test Parallel Calls' }}
+      </button>
+    </div>
+
+    <!-- Batch operations results -->
+    <div *ngIf="batchResults.length > 0" class="batch-results">
+      <h4>Batch Operations Results:</h4>
+      <div class="results-list">
+        <div *ngFor="let result of batchResults; trackBy: trackByIndex" class="result-item">
+          <span class="result-type">{{ result.type }}</span>
+          <span class="result-message">{{ result.message }}</span>
+          <span class="result-time">{{ result.duration }}ms</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading States Demo -->
+  <div class="section">
+    <h3>🔄 Loading States Demo</h3>
+    <p>Observe how loading states are managed across different operations:</p>
+    
+    <div class="loading-indicators">
+      <div class="loading-item">
+        <span class="loading-label">Global Loading:</span>
+        <span class="loading-status" [class.active]="isLoading">
+          {{ isLoading ? '🔄 Loading...' : '✅ Ready' }}
+        </span>
+      </div>
+      <div class="loading-item">
+        <span class="loading-label">Reactive Demo:</span>
+        <span class="loading-status" [class.active]="isReactiveDemoRunning">
+          {{ isReactiveDemoRunning ? '🔄 Running...' : '⏸️ Stopped' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error display -->
+  <div *ngIf="error" class="error-card">
+    <h4>❌ Error:</h4>
+    <p>{{ error }}</p>
+    <button (click)="clearError()" class="btn btn-secondary">Clear Error</button>
+  </div>
+</div> 

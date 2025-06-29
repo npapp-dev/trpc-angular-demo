@@ -1,0 +1,79 @@
+<div class="posts-container">
+  <div class="header-section">
+    <h2>📝 Posts with User Information</h2>
+    <p>Demonstrate fetching related data with tRPC and RxJS observables</p>
+  </div>
+
+  <!-- Posts List Section -->
+  <div class="section">
+    <div class="section-header">
+      <h3>📋 Posts List</h3>
+      <button (click)="loadPosts()" [disabled]="isLoading" class="btn btn-secondary">
+        {{ isLoading ? 'Loading...' : 'Refresh Posts' }}
+      </button>
+    </div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading && posts.length === 0" class="loading">
+      <p>Loading posts...</p>
+    </div>
+
+    <!-- Posts grid -->
+    <div *ngIf="posts.length > 0" class="posts-grid">
+      <div *ngFor="let post of posts" class="post-card">
+        <div class="post-header">
+          <h4 class="post-title">{{ post.title }}</h4>
+          <span class="post-id">#{{ post.id }}</span>
+        </div>
+        
+        <div class="post-content">
+          <p>{{ post.content }}</p>
+        </div>
+        
+        <div class="post-footer">
+          <div class="user-info">
+            <div class="user-avatar">
+              {{ post.user?.name?.charAt(0) || '?' }}
+            </div>
+            <div class="user-details">
+              <strong>{{ post.user?.name || 'Unknown User' }}</strong>
+              <span class="user-email">{{ post.user?.email || 'No email' }}</span>
+              <span class="user-age">Age: {{ post.user?.age || 'N/A' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!isLoading && posts.length === 0" class="empty-state">
+      <p>No posts found.</p>
+    </div>
+  </div>
+
+  <!-- Statistics Section -->
+  <div *ngIf="posts.length > 0" class="section">
+    <h3>📊 Statistics</h3>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">{{ posts.length }}</div>
+        <div class="stat-label">Total Posts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ uniqueUsers.length }}</div>
+        <div class="stat-label">Unique Authors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ averageAge | number:'1.0-0' }}</div>
+        <div class="stat-label">Avg Author Age</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error display -->
+  <div *ngIf="error" class="error-card">
+    <h4>❌ Error:</h4>
+    <p>{{ error }}</p>
+    <button (click)="clearError()" class="btn btn-secondary">Clear Error</button>
+  </div>
+</div> 
