@@ -9,6 +9,7 @@
 
   <!-- Greeting Demo Section -->
   <div class="demo-section">
+    <form (ngSubmit)="getGreeting()">
     <h3>🎯 Greeting Demo</h3>
     <p>Test the basic tRPC greeting functionality with RxJS observables:</p>
     
@@ -16,17 +17,19 @@
       <input 
         type="text" 
         [(ngModel)]="greetingName" 
+        name="greetingName"
         placeholder="Enter your name (optional)"
         class="form-input"
       >
       <button 
-        (click)="getGreeting()" 
+        type="submit"
         [disabled]="isLoading"
         class="btn btn-primary"
       >
         {{ isLoading ? 'Loading...' : 'Get Greeting' }}
       </button>
     </div>
+  </form>
 
     <!-- Display greeting result -->
     <div *ngIf="greetingResult" class="result-card">

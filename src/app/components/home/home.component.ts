@@ -110,7 +110,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.subscriptions.push(
         test().subscribe({
           next: (result) => {
-            this.testResults!.push({
+            this.testResults.push({
               endpoint: name,
               success: true,
               message: `Received ${Array.isArray(result) ? result.length : 1} item(s)`
@@ -121,7 +121,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             }
           },
           error: (error) => {
-            this.testResults!.push({
+            this.testResults.push({
               endpoint: name,
               success: false,
               message: error.message || 'Request failed'

@@ -51,5 +51,8 @@
       "unitTestRunner": "jest"
     }
   },
+  "cli": {
+    "tui": false
+  },
   "defaultProject": "trpc-angular-demo"
 }
