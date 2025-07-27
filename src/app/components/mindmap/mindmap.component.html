@@ -1,0 +1,183 @@
+<div class="mindmap-container">
+  <!-- Header -->
+  <div class="mindmap-header">
+    <h1>🧠 tRPC Mind Map</h1>
+    <p>Interactive learning guide for tRPC and multi-router architecture</p>
+    
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input 
+        type="text" 
+        placeholder="Search mind map nodes..." 
+        [(ngModel)]="searchTerm"
+        class="search-input"
+      >
+      <span class="search-icon">🔍</span>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="mindmap-content">
+    <!-- Mind Map Tree -->
+    <div class="mindmap-tree">
+      <div 
+        *ngFor="let node of getFilteredNodes()" 
+        class="mindmap-section"
+      >
+        <div 
+          class="mindmap-node root-node"
+          [class]="getNodeClass(node)"
+          [ngStyle]="getNodeStyle(node)"
+          (click)="selectNode(node)"
+          (keydown.enter)="selectNode(node)"
+          (keydown.space)="selectNode(node)"
+          tabindex="0"
+          role="button"
+          [class.selected]="selectedNode?.id === node.id"
+        >
+          <div class="node-header">
+            <span class="node-icon">{{ node.icon }}</span>
+            <span class="node-title">{{ node.title }}</span>
+            <button 
+              *ngIf="node.children && node.children.length > 0"
+              class="expand-button"
+              (click)="toggleNode(node); $event.stopPropagation()"
+            >
+              {{ node.expanded ? '−' : '+' }}
+            </button>
+          </div>
+          <p *ngIf="node.description" class="node-description">{{ node.description }}</p>
+        </div>
+
+        <!-- Children -->
+        <div 
+          *ngIf="node.children && node.children.length > 0 && node.expanded"
+          class="children-container"
+        >
+          <div 
+            *ngFor="let child of node.children" 
+            class="child-node"
+          >
+            <div 
+              class="mindmap-node"
+              [class]="getNodeClass(child)"
+              [ngStyle]="getNodeStyle(child)"
+              (click)="selectNode(child)"
+              (keydown.enter)="selectNode(child)"
+              (keydown.space)="selectNode(child)"
+              tabindex="0"
+              role="button"
+              [class.selected]="selectedNode?.id === child.id"
+            >
+              <div class="node-header">
+                <span class="node-icon">{{ child.icon }}</span>
+                <span class="node-title">{{ child.title }}</span>
+                <button 
+                  *ngIf="child.children && child.children.length > 0"
+                  class="expand-button"
+                  (click)="toggleNode(child); $event.stopPropagation()"
+                >
+                  {{ child.expanded ? '−' : '+' }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Grandchildren -->
+            <div 
+              *ngIf="child.children && child.children.length > 0 && child.expanded"
+              class="grandchildren-container"
+            >
+              <div 
+                *ngFor="let grandchild of child.children" 
+                class="grandchild-node"
+              >
+                                 <div 
+                   class="mindmap-node"
+                   [class]="getNodeClass(grandchild)"
+                   [ngStyle]="getNodeStyle(grandchild)"
+                   (click)="selectNode(grandchild)"
+                   (keydown.enter)="selectNode(grandchild)"
+                   (keydown.space)="selectNode(grandchild)"
+                   tabindex="0"
+                   role="button"
+                   [class.selected]="selectedNode?.id === grandchild.id"
+                 >
+                  <div class="node-header">
+                    <span class="node-icon">{{ grandchild.icon }}</span>
+                    <span class="node-title">{{ grandchild.title }}</span>
+                    <button 
+                      *ngIf="grandchild.children && grandchild.children.length > 0"
+                      class="expand-button"
+                      (click)="toggleNode(grandchild); $event.stopPropagation()"
+                    >
+                      {{ grandchild.expanded ? '−' : '+' }}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Great Grandchildren -->
+                <div 
+                  *ngIf="grandchild.children && grandchild.children.length > 0 && grandchild.expanded"
+                  class="great-grandchildren-container"
+                >
+                  <div 
+                    *ngFor="let greatGrandchild of grandchild.children" 
+                    class="great-grandchild-node"
+                  >
+                                         <div 
+                       class="mindmap-node"
+                       [class]="getNodeClass(greatGrandchild)"
+                       [ngStyle]="getNodeStyle(greatGrandchild)"
+                       (click)="selectNode(greatGrandchild)"
+                       (keydown.enter)="selectNode(greatGrandchild)"
+                       (keydown.space)="selectNode(greatGrandchild)"
+                       tabindex="0"
+                       role="button"
+                       [class.selected]="selectedNode?.id === greatGrandchild.id"
+                     >
+                      <div class="node-header">
+                        <span class="node-icon">{{ greatGrandchild.icon }}</span>
+                        <span class="node-title">{{ greatGrandchild.title }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selected Node Details -->
+    <div class="node-details" *ngIf="selectedNode">
+      <div class="details-header">
+        <h3>{{ selectedNode.title }}</h3>
+        <button class="close-button" (click)="selectedNode = null">×</button>
+      </div>
+      <div class="details-content">
+        <div class="detail-item">
+          <span class="detail-label">Level:</span>
+          <span class="detail-value">{{ selectedNode.level }}</span>
+        </div>
+        <div class="detail-item" *ngIf="selectedNode.description">
+          <span class="detail-label">Description:</span>
+          <span class="detail-value">{{ selectedNode.description }}</span>
+        </div>
+        <div class="detail-item" *ngIf="selectedNode.children">
+          <span class="detail-label">Children:</span>
+          <span class="detail-value">{{ selectedNode.children.length }}</span>
+        </div>
+        <div class="detail-item" *ngIf="selectedNode.icon">
+          <span class="detail-label">Icon:</span>
+          <span class="detail-value">{{ selectedNode.icon }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="mindmap-footer">
+    <p>Click on any node to see details • Use search to find specific topics • Expand/collapse sections to explore</p>
+  </div>
+</div> 

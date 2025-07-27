@@ -113,6 +113,23 @@
   margin-top: 1rem;
 }
 
+.test-result {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background: #f8f9fa;
+}
+
+.test-result .success {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.test-result .error {
+  color: #dc3545;
+  font-weight: 600;
+}
+
 .features-section {
   background: white;
   padding: 2rem;
@@ -123,7 +140,7 @@
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
   margin-top: 1.5rem;
 }

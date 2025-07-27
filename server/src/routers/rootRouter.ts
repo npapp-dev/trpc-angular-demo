@@ -1,11 +1,12 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
+import { User } from '../models/user';
 
 // Initialize tRPC
 const t = initTRPC.create();
 
 // Sample data - in a real app, this would come from a database
-const users = [
+const users: User[] = [
   { id: 1, name: 'John Doe', email: 'john@example.com', age: 30 },
   { id: 2, name: 'Jane Smith', email: 'jane@example.com', age: 25 },
   { id: 3, name: 'Bob Johnson', email: 'bob@example.com', age: 35 },
@@ -15,6 +16,12 @@ const posts = [
   { id: 1, title: 'First Post', content: 'This is the first post', userId: 1 },
   { id: 2, title: 'Second Post', content: 'This is the second post', userId: 2 },
   { id: 3, title: 'Third Post', content: 'This is the third post', userId: 1 },
+];
+
+const products = [
+  { id: 1, name: 'Product 1', price: 100 },
+  { id: 2, name: 'Product 2', price: 200 },
+  { id: 3, name: 'Product 3', price: 300 },
 ];
 
 // Create the router and procedure helpers
@@ -34,7 +41,12 @@ export const appRouter = router({
     }),
 
   // Query that returns all users
-  getUsers: publicProcedure.query(() => {
+  getUsers: publicProcedure.output(z.array(z.object({
+    id: z.number(),
+    name: z.string(),
+    email: z.string(),
+    age: z.number(),
+  }))).query(() => {
     return users;
   }),
 

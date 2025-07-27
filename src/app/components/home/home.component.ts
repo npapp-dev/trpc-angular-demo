@@ -6,6 +6,12 @@ import { TrpcService } from '../../services/trpc.service';
 import { GreetingResponse } from '../../shared/types';
 import { Subscription } from 'rxjs';
 
+interface TestResult {
+  endpoint: string;
+  success: boolean;
+  message?: string;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -16,6 +22,7 @@ import { Subscription } from 'rxjs';
 export class HomeComponent implements OnInit, OnDestroy {
   greetingName = '';
   greetingResult: GreetingResponse | null = null;
+  testResults: TestResult[] | null = null;
   error: string | null = null;
   isLoading = false;
   
@@ -60,6 +67,73 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  /**
+   * Test new namespaced endpoints
+   */
+  testNewEndpoints(): void {
+    this.testResults = [];
+    this.error = null;
+
+    const tests = [
+      {
+        name: 'Users - GetAll',
+        test: () => this.trpcService.getUsers()
+      },
+      {
+        name: 'Posts - GetAll',
+        test: () => this.trpcService.getPosts()
+      },
+      {
+        name: 'Products - GetAll',
+        test: () => this.trpcService.getProducts()
+      },
+      {
+        name: 'Utils - Health',
+        test: () => this.trpcService.getHealth()
+      },
+      {
+        name: 'Utils - ServerInfo',
+        test: () => this.trpcService.getServerInfo()
+      },
+      {
+        name: 'Products - InStock',
+        test: () => this.trpcService.getProductsInStock()
+      }
+    ];
+
+    let completedTests = 0;
+    const totalTests = tests.length;
+
+    tests.forEach(({ name, test }) => {
+      this.subscriptions.push(
+        test().subscribe({
+          next: (result) => {
+            this.testResults!.push({
+              endpoint: name,
+              success: true,
+              message: `Received ${Array.isArray(result) ? result.length : 1} item(s)`
+            });
+            completedTests++;
+            if (completedTests === totalTests) {
+              this.isLoading = false;
+            }
+          },
+          error: (error) => {
+            this.testResults!.push({
+              endpoint: name,
+              success: false,
+              message: error.message || 'Request failed'
+            });
+            completedTests++;
+            if (completedTests === totalTests) {
+              this.isLoading = false;
+            }
+          }
+        })
+      );
+    });
   }
 
   /**

@@ -43,6 +43,34 @@
     </div>
   </div>
 
+  <!-- New Endpoints Test Section -->
+  <div class="demo-section">
+    <h3>🧪 Test New Endpoints</h3>
+    <p>Test the new namespaced endpoints to ensure they're working correctly:</p>
+    
+    <div class="demo-controls">
+      <button 
+        (click)="testNewEndpoints()" 
+        [disabled]="isLoading"
+        class="btn btn-primary"
+      >
+        {{ isLoading ? 'Testing...' : 'Test New Endpoints' }}
+      </button>
+    </div>
+
+    <!-- Display test results -->
+    <div *ngIf="testResults" class="result-card">
+      <h4>New Endpoints Test Results:</h4>
+      <div *ngFor="let result of testResults" class="test-result">
+        <strong>{{ result.endpoint }}:</strong> 
+        <span [class]="result.success ? 'success' : 'error'">
+          {{ result.success ? '✅ Success' : '❌ Failed' }}
+        </span>
+        <span *ngIf="result.message"> - {{ result.message }}</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Features Overview -->
   <div class="features-section">
     <h3>🚀 Available Features</h3>
@@ -63,6 +91,12 @@
         <h4>🧪 Advanced Demo</h4>
         <p>Test error handling, slow queries, and more advanced features</p>
         <a routerLink="/demo" class="btn btn-outline">Try Demo</a>
+      </div>
+      
+      <div class="feature-card">
+        <h4>🧠 tRPC Mind Map</h4>
+        <p>Interactive learning guide for tRPC and multi-router architecture</p>
+        <a routerLink="/mindmap" class="btn btn-outline">Explore Mind Map</a>
       </div>
     </div>
   </div>

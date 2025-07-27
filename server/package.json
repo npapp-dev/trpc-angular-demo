@@ -5,12 +5,13 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "npx ts-node src/server.ts",
     "dev": "tsx src/server.ts",
-    "watch": "tsx watch src/server.ts"
+    "watch": "tsx watch src/server.ts",
+    "dev:watch": "nodemon"
   },
   "dependencies": {
-    "@trpc/server": "^10.45.0",
+    "@trpc/server": "^11.4.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "zod": "^3.22.4"
@@ -19,6 +20,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.0",
+    "nodemon": "^3.0.2",
     "tsx": "^4.20.3",
     "typescript": "^5.3.0"
   }

@@ -1,7 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, BehaviorSubject } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
-import { User, Post, CreateUserInput, UpdateUserInput, GreetingResponse, SlowQueryResponse } from '../shared/types';
+import { 
+  User, 
+  Post, 
+  CreateUserInput, 
+  UpdateUserInput, 
+  GreetingResponse, 
+  SlowQueryResponse, 
+  Product, 
+  CreateProductInput, 
+  UpdateProductInput 
+} from '../shared/types';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +30,6 @@ export class TrpcService {
 
   /**
    * Generic method to make HTTP requests to tRPC endpoints
-   * This provides a consistent way to handle loading states and errors
    */
   private makeRequest<T>(endpoint: string, method: 'GET' | 'POST' = 'GET', body?: any): Observable<T> {
     this.loadingSubject.next(true);
@@ -63,14 +72,14 @@ export class TrpcService {
    */
   getGreeting(name?: string): Observable<GreetingResponse> {
     const params = name ? `?input=${encodeURIComponent(JSON.stringify({ name }))}` : '';
-    return this.makeRequest<GreetingResponse>(`greeting${params}`);
+    return this.makeRequest<GreetingResponse>(`utils.greeting${params}`);
   }
 
   /**
    * Get all users from the server
    */
   getUsers(): Observable<User[]> {
-    return this.makeRequest<User[]>('getUsers');
+    return this.makeRequest<User[]>('users.getAll');
   }
 
   /**
@@ -78,28 +87,28 @@ export class TrpcService {
    */
   getUserById(id: number): Observable<User> {
     const params = `?input=${encodeURIComponent(JSON.stringify({ id }))}`;
-    return this.makeRequest<User>(`getUserById${params}`);
+    return this.makeRequest<User>(`users.getById${params}`);
   }
 
   /**
    * Get all posts with user information
    */
   getPosts(): Observable<Post[]> {
-    return this.makeRequest<Post[]>('getPosts');
+    return this.makeRequest<Post[]>('posts.getAll');
   }
 
   /**
    * Create a new user
    */
   createUser(userData: CreateUserInput): Observable<User> {
-    return this.makeRequest<User>('createUser', 'POST', userData);
+    return this.makeRequest<User>('users.create', 'POST', userData);
   }
 
   /**
    * Update an existing user
    */
   updateUser(userData: UpdateUserInput): Observable<User> {
-    return this.makeRequest<User>('updateUser', 'POST', userData);
+    return this.makeRequest<User>('users.update', 'POST', userData);
   }
 
   /**
@@ -107,7 +116,7 @@ export class TrpcService {
    */
   testError(shouldError: boolean): Observable<{ message: string }> {
     const params = `?input=${encodeURIComponent(JSON.stringify({ shouldError }))}`;
-    return this.makeRequest<{ message: string }>(`getUserWithError${params}`);
+    return this.makeRequest<{ message: string }>(`utils.testError${params}`);
   }
 
   /**
@@ -115,7 +124,97 @@ export class TrpcService {
    */
   slowQuery(delay: number): Observable<SlowQueryResponse> {
     const params = `?input=${encodeURIComponent(JSON.stringify({ delay }))}`;
-    return this.makeRequest<SlowQueryResponse>(`slowQuery${params}`);
+    return this.makeRequest<SlowQueryResponse>(`utils.slowQuery${params}`);
+  }
+
+  /**
+   * Get server health information
+   */
+  getHealth(): Observable<any> {
+    return this.makeRequest<any>('utils.health');
+  }
+
+  /**
+   * Get server information
+   */
+  getServerInfo(): Observable<any> {
+    return this.makeRequest<any>('utils.serverInfo');
+  }
+
+  /**
+   * Search users by name
+   */
+  searchUsers(query: string): Observable<User[]> {
+    const params = `?input=${encodeURIComponent(JSON.stringify({ query }))}`;
+    return this.makeRequest<User[]>(`users.search${params}`);
+  }
+
+  /**
+   * Get posts by user ID
+   */
+  getPostsByUserId(userId: number): Observable<Post[]> {
+    const params = `?input=${encodeURIComponent(JSON.stringify({ userId }))}`;
+    return this.makeRequest<Post[]>(`posts.getByUserId${params}`);
+  }
+
+  /**
+   * Get all products
+   */
+  getProducts(): Observable<Product[]> {
+    return this.makeRequest<Product[]>('products.getAll');
+  }
+
+  /**
+   * Get products by category
+   */
+  getProductsByCategory(category: string): Observable<Product[]> {
+    const params = `?input=${encodeURIComponent(JSON.stringify({ category }))}`;
+    return this.makeRequest<Product[]>(`products.getByCategory${params}`);
+  }
+
+  /**
+   * Get products in stock
+   */
+  getProductsInStock(): Observable<Product[]> {
+    return this.makeRequest<Product[]>('products.getInStock');
+  }
+
+  /**
+   * Get product by ID
+   */
+  getProductById(id: number): Observable<Product> {
+    const params = `?input=${encodeURIComponent(JSON.stringify({ id }))}`;
+    return this.makeRequest<Product>(`products.getById${params}`);
+  }
+
+  /**
+   * Create a new product
+   */
+  createProduct(productData: CreateProductInput): Observable<Product> {
+    return this.makeRequest<Product>('products.create', 'POST', productData);
+  }
+
+  /**
+   * Update an existing product
+   */
+  updateProduct(productData: UpdateProductInput): Observable<Product> {
+    return this.makeRequest<Product>('products.update', 'POST', productData);
+  }
+
+  /**
+   * Search products by name
+   */
+  searchProducts(query: string): Observable<Product[]> {
+    const params = `?input=${encodeURIComponent(JSON.stringify({ query }))}`;
+    return this.makeRequest<Product[]>(`products.search${params}`);
+  }
+
+  /**
+   * Get products by price range
+   */
+  getProductsByPriceRange(minPrice: number, maxPrice: number): Observable<Product[]> {
+    const params = `?input=${encodeURIComponent(JSON.stringify({ minPrice, maxPrice }))}`;
+    return this.makeRequest<Product[]>(`products.getByPriceRange${params}`);
   }
 
   /**

@@ -3,6 +3,7 @@ import { HomeComponent } from './components/home/home.component';
 import { UsersComponent } from './components/users/users.component';
 import { PostsComponent } from './components/posts/posts.component';
 import { DemoComponent } from './components/demo/demo.component';
+import { MindmapComponent } from './components/mindmap/mindmap.component';
 
 export const appRoutes: Route[] = [
     {
@@ -21,6 +22,10 @@ export const appRoutes: Route[] = [
     {
         path: 'demo',
         component: DemoComponent
+    },
+    {
+        path: 'mindmap',
+        component: MindmapComponent
     },
     // Redirect to home for any other route
     {
